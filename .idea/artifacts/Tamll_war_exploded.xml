@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="exploded-war" name="Tamll:war exploded">
-    <output-path>$PROJECT_DIR$/../Tamll/out/artifacts/Tamll_war_exploded</output-path>
+    <output-path>$PROJECT_DIR$/out/artifacts/Tamll_war_exploded</output-path>
     <root id="root">
       <element id="javaee-facet-resources" facet="Tmall/web/Web" />
       <element id="directory" name="WEB-INF">
@@ -8,6 +8,9 @@
           <element id="module-output" name="Tmall" />
         </element>
       </element>
+      <element id="library" level="project" name="javax.servlet:jstl:1.1.2" />
+      <element id="library" level="project" name="mysql:mysql-connector-java:5.1.22" />
+      <element id="library" level="project" name="taglibs:standard:1.1.2" />
     </root>
   </artifact>
 </component>
