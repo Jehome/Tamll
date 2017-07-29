@@ -1,6 +1,5 @@
 package tmall.dao;
 
-import com.sun.corba.se.impl.interceptors.PICurrent;
 import tmall.bean.Category;
 import tmall.bean.Product;
 import tmall.bean.ProductImage;
@@ -219,6 +218,56 @@ public class ProductDao {
 
 
     }
+
+    public void setSaleAndReviewNumber(Product product) {
+        int saleCount = new OrderItemDao().getSaleCount(product.getId());
+        product.setSaleCount(saleCount);
+
+        int reviewCount = new ReviewDao().getCount(product.getId());
+        product.setReviewCount(reviewCount);
+
+    }
+
+    public void setSaleAndReviewNumber(List<Product> products) {
+        for (Product product : products) {
+            setSaleAndReviewNumber(product);
+        }
+    }
+
+    public List<Product> search(String keyword, int begin, int size) {
+
+        List<Product> products = new ArrayList<>();
+
+        String sql = "SELECT * FROM product WHERE name LIKE ? LIMIT ?,?";
+        try (Connection connection = DBUtil.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setString(1, keyword);
+            preparedStatement.setInt(2, begin);
+            preparedStatement.setInt(3, size);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                Product product = new Product();
+                product.setId(resultSet.getInt("id"));
+                product.setName(resultSet.getString("name"));
+                product.setSubTitle(resultSet.getString("subTitle"));
+                product.setOriginalPrice(resultSet.getFloat("originalPrice"));
+                product.setStock(resultSet.getInt("stock"));
+                product.setPromotePrice(resultSet.getFloat("promotePrice"));
+                product.setCategory(new CategoryDao().get(resultSet.getInt("cid")));
+                product.setCreateDate(DateUtil.timestampToDate(resultSet.getTimestamp("createDate")));
+                setFirstProductPicture(product);
+                products.add(product);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return products;
+    }
+
+
+
 
 
 }
